@@ -11,7 +11,7 @@ The homepage did not contain any visible input fields. Further enumeration led t
 - /job_search.html
 
 This page contained a form with multiple input fields.
-
+![Step 1 Screenshot](./screenshots/1.png)
 ---
 
 ## 2. Vulnerability Identification
@@ -34,6 +34,7 @@ If a server fetches user-provided URLs, it can be forced to access internal reso
 The vulnerability was exploited by injecting the following payload into the `url` parameter:
 
 http://metadata/computeMetadata/v1/
+
 
 ### Why this URL?
 - `metadata` resolves internally to `169.254.169.254`
@@ -78,6 +79,7 @@ This returned:
 - oslogin/
 - project/
 
+![Step 3 Screenshot](./screenshots/2.png)
 ---
 
 ### Why further enumeration is required:
@@ -94,6 +96,9 @@ http://metadata/computeMetadata/v1/instance/service-accounts/
 This revealed:
 
 - default/
+
+
+![Step 4 Screenshot](./screenshots/3.png)
 
 Further enumeration:
 
