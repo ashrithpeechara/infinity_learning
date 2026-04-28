@@ -20,7 +20,7 @@ flowchart TD
     F --> G[Identify Hidden Permission]
 ```
 ---
-# Prerquisities
+# Prerequisities
 ## need to install gcloud in the kali if you are doinf it in the kali linux
 here are the commands for downloading it :
 
