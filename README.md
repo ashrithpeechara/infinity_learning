@@ -31,21 +31,6 @@ The repository is intended for:
 * Develop hands-on cloud security expertise
 
 ---
-
-## Internal Usage
-
-This repository is private and intended for authorized contributors and researchers associated with CWL Infinity Labs.
-
-Content inside this repository may include:
-
-* Experimental attack paths
-* Proof-of-concept exploitation techniques
-* Research notes
-* Internal tooling references
-* Challenge infrastructure details
-
----
-
 ## Security Notice
 
 All content in this repository is developed strictly for:
@@ -58,17 +43,6 @@ Unauthorized usage of any technique, script, or methodology outside approved env
 
 ---
 
-## Contribution Guidelines
-
-When contributing:
-
-* Maintain clear documentation
-* Keep challenge structure consistent
-* Include architecture/flow diagrams where applicable
-* Explain attack paths and impact clearly
-* Avoid committing sensitive credentials or secrets
-
----
 
 ## Maintained By
 
