@@ -83,44 +83,6 @@ The repository includes cloud attack scenarios mapped across multiple offensive 
 * Token Abuse
 * Secret Management
 
----
-
-# Repository Structure
-
-```bash id="9dn5ti"
-cloud-security/
-│
-├── aws/
-├── azure/
-├── gcp/
-│
-├── tactics/
-│   ├── initial-access/
-│   ├── persistence/
-│   ├── privilege-escalation/
-│   ├── enumeration/
-│   ├── credential-access/
-│   ├── discovery/
-│   ├── execution/
-│   ├── defense-evasion/
-│   └── data-exfiltration/
-│
-├── services/
-│   ├── iam/
-│   ├── storage/
-│   ├── compute/
-│   ├── cognito/
-│   ├── ssm/
-│   ├── logging/
-│   ├── sqs/
-│   ├── sns/
-│   └── eventbridge/
-│
-├── diagrams/
-├── writeups/
-├── research/
-└── resources/
-```
 
 ---
 
