@@ -13,8 +13,13 @@ The repository is intended for:
 * Lab development and testing
 
 ---
-
-
+## Topics covered in This Repository:
+1. CLoud Security
+2. DevOps Security
+3. Kubernetes Security
+4. On-Premises Security
+5. APT labs
+6. AI security
 
 ## Objectives
 
