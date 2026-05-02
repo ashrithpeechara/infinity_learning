@@ -5,12 +5,21 @@
 # Architecture Overview
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#4a90e2",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart LR
     A["🧑‍💻 Attacker"] --> B["🌐 Vulnerable Web Application"]
     B --> C["☁️ GCP Metadata Service"]
     C --> D["🔐 Service Account Data"]
-
-    classDef default fill:#1e1e1e,stroke:#4a90e2,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -28,6 +37,17 @@ The homepage did not contain any visible input fields. Further enumeration led t
 This page contained a form with multiple input fields.
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#4a90e2",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart TD
     A["🌐 Target Website"] --> B["index.html"]
 
@@ -38,8 +58,6 @@ flowchart TD
     D --> E["Discovered:<br/>/job_search.html"]
 
     E --> F["Form with Multiple Input Parameters"]
-
-    classDef default fill:#1e1e1e,stroke:#4a90e2,color:#ffffff,stroke-width:2px;
 ```
 
 ![Step 1 Screenshot](./screenshots/1.png)
@@ -60,6 +78,17 @@ Initial testing showed that the application accepts user-supplied URLs and proce
 If a server fetches user-provided URLs, it can be forced to access internal resources (like metadata services), which are normally inaccessible externally.
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#f39c12",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart LR
     A["🧑 User Input"] --> B["url Parameter"]
 
@@ -68,8 +97,6 @@ flowchart LR
     C --> D["🔒 Internal Resource Access"]
 
     D --> E["⚠️ SSRF Vulnerability"]
-
-    classDef default fill:#1e1e1e,stroke:#f39c12,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -89,6 +116,13 @@ http://metadata/computeMetadata/v1/
 The application backend makes the request on our behalf, allowing us to access internal resources.
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff"
+  }
+}}%%
+
 sequenceDiagram
     participant A as 🧑‍💻 Attacker
     participant B as 🌐 Web Application
@@ -122,14 +156,23 @@ Several attempts were made using payloads such as:
 - Only SSRF-based exploitation works
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#9b59b6",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart TD
     A["📥 User Payload"] --> B{"⚙️ Backend Behavior"}
 
     B -->|Executes Commands| C["💥 RCE Possible"]
 
     B -->|Fetches URLs Only| D["🌐 SSRF Exploitation"]
-
-    classDef default fill:#1e1e1e,stroke:#9b59b6,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -147,12 +190,21 @@ This returned:
 - project/
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#27ae60",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart TD
     A["☁️ Metadata Root"] --> B["instance/"]
     A --> C["oslogin/"]
     A --> D["project/"]
-
-    classDef default fill:#1e1e1e,stroke:#27ae60,color:#ffffff,stroke-width:2px;
 ```
 
 ![Step 3 Screenshot](./screenshots/2.png)
@@ -175,11 +227,20 @@ This revealed:
 - default/
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#e67e22",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart TD
     A["instance/"] --> B["service-accounts/"]
     B --> C["default/"]
-
-    classDef default fill:#1e1e1e,stroke:#e67e22,color:#ffffff,stroke-width:2px;
 ```
 
 ![Step 4 Screenshot](./screenshots/3.png)
@@ -196,13 +257,22 @@ Returned:
 - identity
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#3498db",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart TD
     A["default/"] --> B["📧 email"]
     A --> C["🔑 token"]
     A --> D["📜 scopes"]
     A --> E["🆔 identity"]
-
-    classDef default fill:#1e1e1e,stroke:#3498db,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -219,6 +289,13 @@ http://metadata/computeMetadata/v1/instance/service-accounts/default/email
 - It confirms compromise of cloud identity
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff"
+  }
+}}%%
+
 sequenceDiagram
     participant A as 🧑‍💻 Attacker
     participant B as 🌐 Vulnerable App
@@ -244,14 +321,23 @@ However:
 - This makes SSRF sufficient without needing full RCE
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#16a085",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart LR
     A["☁️ Standard GCP"] --> B["Requires Metadata-Flavor Header"]
 
     C["🧪 Lab Environment"] --> D["Header Enforcement Disabled"]
 
     D --> E["✅ SSRF Access Successful"]
-
-    classDef default fill:#1e1e1e,stroke:#16a085,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -274,6 +360,13 @@ This vulnerability allows:
 - Risk of privilege escalation in GCP environment
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff"
+  }
+}}%%
+
 mindmap
   root((⚠️ SSRF Impact))
     Metadata Access
@@ -296,6 +389,17 @@ To prevent such vulnerabilities:
 - Enforce metadata access protection mechanisms
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#2ecc71",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart TD
     A["🛡️ Mitigation Strategies"]
 
@@ -308,8 +412,6 @@ flowchart TD
     A --> E["📋 URL Allowlisting"]
 
     A --> F["🔒 Metadata Protection"]
-
-    classDef default fill:#1e1e1e,stroke:#2ecc71,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -324,12 +426,21 @@ The key takeaway is understanding:
 - Why internal endpoints must never be exposed indirectly
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#e74c3c",
+    "lineColor": "#555555",
+    "background": "#ffffff"
+  }
+}}%%
+
 flowchart LR
     A["🧑 User-Controlled URL"]
     --> B["🌐 Backend Request"]
     --> C["☁️ Internal Metadata Access"]
     --> D["🔓 Sensitive Data Disclosure"]
     --> E["⚠️ Potential Cloud Compromise"]
-
-    classDef default fill:#1e1e1e,stroke:#e74c3c,color:#ffffff,stroke-width:2px;
 ```
