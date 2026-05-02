@@ -1,5 +1,20 @@
 # Solution: GCP Metadata Exploitation via SSRF
 
+---
+
+# Architecture Overview
+
+```mermaid
+flowchart LR
+    A["🧑‍💻 Attacker"] --> B["🌐 Vulnerable Web Application"]
+    B --> C["☁️ GCP Metadata Service"]
+    C --> D["🔐 Service Account Data"]
+
+    classDef default fill:#1e1e1e,stroke:#4a90e2,color:#ffffff,stroke-width:2px;
+```
+
+---
+
 ## 1. Reconnaissance
 
 The target web application was accessed via:
@@ -14,11 +29,17 @@ This page contained a form with multiple input fields.
 
 ```mermaid
 flowchart TD
-    A[Target Website] --> B[index.html]
-    B --> C[No Input Fields Found]
-    C --> D[Further Enumeration]
-    D --> E["/job_search.html"]
-    E --> F[Input Form Discovered]
+    A["🌐 Target Website"] --> B["index.html"]
+
+    B --> C["No Visible Input Fields"]
+
+    C --> D["Directory / Endpoint Enumeration"]
+
+    D --> E["Discovered:<br/>/job_search.html"]
+
+    E --> F["Form with Multiple Input Parameters"]
+
+    classDef default fill:#1e1e1e,stroke:#4a90e2,color:#ffffff,stroke-width:2px;
 ```
 
 ![Step 1 Screenshot](./screenshots/1.png)
@@ -40,10 +61,15 @@ If a server fetches user-provided URLs, it can be forced to access internal reso
 
 ```mermaid
 flowchart LR
-    A[User Input] --> B[url Parameter]
-    B --> C[Backend Fetches URL]
-    C --> D[Internal Resource Access]
-    D --> E[Potential SSRF]
+    A["🧑 User Input"] --> B["url Parameter"]
+
+    B --> C["🌐 Backend Fetches URL"]
+
+    C --> D["🔒 Internal Resource Access"]
+
+    D --> E["⚠️ SSRF Vulnerability"]
+
+    classDef default fill:#1e1e1e,stroke:#f39c12,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -64,14 +90,14 @@ The application backend makes the request on our behalf, allowing us to access i
 
 ```mermaid
 sequenceDiagram
-    participant Attacker
-    participant WebApp
-    participant MetadataServer
+    participant A as 🧑‍💻 Attacker
+    participant B as 🌐 Web Application
+    participant C as ☁️ GCP Metadata
 
-    Attacker->>WebApp: Submit metadata URL
-    WebApp->>MetadataServer: Internal Request
-    MetadataServer-->>WebApp: Metadata Response
-    WebApp-->>Attacker: Return Metadata
+    A->>B: Submit Metadata URL
+    B->>C: Internal Request
+    C-->>B: Metadata Response
+    B-->>A: Return Sensitive Data
 ```
 
 ---
@@ -97,9 +123,13 @@ Several attempts were made using payloads such as:
 
 ```mermaid
 flowchart TD
-    A[User Payload] --> B{Backend Behavior}
-    B -->|Executes Commands| C[RCE Possible]
-    B -->|Fetches URL Only| D[Only SSRF Possible]
+    A["📥 User Payload"] --> B{"⚙️ Backend Behavior"}
+
+    B -->|Executes Commands| C["💥 RCE Possible"]
+
+    B -->|Fetches URLs Only| D["🌐 SSRF Exploitation"]
+
+    classDef default fill:#1e1e1e,stroke:#9b59b6,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -118,9 +148,11 @@ This returned:
 
 ```mermaid
 flowchart TD
-    A[Metadata Root] --> B[instance/]
-    A --> C[oslogin/]
-    A --> D[project/]
+    A["☁️ Metadata Root"] --> B["instance/"]
+    A --> C["oslogin/"]
+    A --> D["project/"]
+
+    classDef default fill:#1e1e1e,stroke:#27ae60,color:#ffffff,stroke-width:2px;
 ```
 
 ![Step 3 Screenshot](./screenshots/2.png)
@@ -144,8 +176,10 @@ This revealed:
 
 ```mermaid
 flowchart TD
-    A[instance/] --> B[service-accounts/]
-    B --> C[default/]
+    A["instance/"] --> B["service-accounts/"]
+    B --> C["default/"]
+
+    classDef default fill:#1e1e1e,stroke:#e67e22,color:#ffffff,stroke-width:2px;
 ```
 
 ![Step 4 Screenshot](./screenshots/3.png)
@@ -163,10 +197,12 @@ Returned:
 
 ```mermaid
 flowchart TD
-    A[default/] --> B[email]
-    A --> C[token]
-    A --> D[scopes]
-    A --> E[identity]
+    A["default/"] --> B["📧 email"]
+    A --> C["🔑 token"]
+    A --> D["📜 scopes"]
+    A --> E["🆔 identity"]
+
+    classDef default fill:#1e1e1e,stroke:#3498db,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -184,14 +220,14 @@ http://metadata/computeMetadata/v1/instance/service-accounts/default/email
 
 ```mermaid
 sequenceDiagram
-    participant Attacker
-    participant VulnerableApp
-    participant GCPMetadata
+    participant A as 🧑‍💻 Attacker
+    participant B as 🌐 Vulnerable App
+    participant C as ☁️ Metadata Service
 
-    Attacker->>VulnerableApp: Request /default/email
-    VulnerableApp->>GCPMetadata: Internal Metadata Query
-    GCPMetadata-->>VulnerableApp: Service Account Email
-    VulnerableApp-->>Attacker: Exposed Identity
+    A->>B: Request /default/email
+    B->>C: Internal Metadata Query
+    C-->>B: Service Account Email
+    B-->>A: Exposed Cloud Identity
 ```
 
 ---
@@ -209,9 +245,13 @@ However:
 
 ```mermaid
 flowchart LR
-    A[Normal GCP Metadata Access] --> B[Requires Metadata-Flavor Header]
-    C[Lab Environment] --> D[Header Enforcement Disabled]
-    D --> E[Direct SSRF Access Works]
+    A["☁️ Standard GCP"] --> B["Requires Metadata-Flavor Header"]
+
+    C["🧪 Lab Environment"] --> D["Header Enforcement Disabled"]
+
+    D --> E["✅ SSRF Access Successful"]
+
+    classDef default fill:#1e1e1e,stroke:#16a085,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -235,7 +275,7 @@ This vulnerability allows:
 
 ```mermaid
 mindmap
-  root((SSRF Impact))
+  root((⚠️ SSRF Impact))
     Metadata Access
     Service Account Exposure
     Token Extraction
@@ -257,12 +297,19 @@ To prevent such vulnerabilities:
 
 ```mermaid
 flowchart TD
-    A[Mitigation Strategies]
-    A --> B[Input Validation]
-    A --> C[Outbound Request Filtering]
-    A --> D[Block Metadata IP]
-    A --> E[Allowlist URLs]
-    A --> F[Metadata Protection]
+    A["🛡️ Mitigation Strategies"]
+
+    A --> B["✅ Input Validation"]
+
+    A --> C["🌐 Restrict Outbound Requests"]
+
+    A --> D["🚫 Block Metadata Endpoint"]
+
+    A --> E["📋 URL Allowlisting"]
+
+    A --> F["🔒 Metadata Protection"]
+
+    classDef default fill:#1e1e1e,stroke:#2ecc71,color:#ffffff,stroke-width:2px;
 ```
 
 ---
@@ -278,9 +325,11 @@ The key takeaway is understanding:
 
 ```mermaid
 flowchart LR
-    A[User Controlled URL]
-    --> B[Backend Request]
-    --> C[Internal Metadata Access]
-    --> D[Sensitive Information Disclosure]
-    --> E[Potential Cloud Compromise]
+    A["🧑 User-Controlled URL"]
+    --> B["🌐 Backend Request"]
+    --> C["☁️ Internal Metadata Access"]
+    --> D["🔓 Sensitive Data Disclosure"]
+    --> E["⚠️ Potential Cloud Compromise"]
+
+    classDef default fill:#1e1e1e,stroke:#e74c3c,color:#ffffff,stroke-width:2px;
 ```
