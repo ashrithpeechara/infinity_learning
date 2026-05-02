@@ -17,7 +17,7 @@ flowchart TD
     A[Target Website] --> B[index.html]
     B --> C[No Input Fields Found]
     C --> D[Further Enumeration]
-    D --> E[/job_search.html]
+    D --> E["/job_search.html"]
     E --> F[Input Form Discovered]
 ```
 
