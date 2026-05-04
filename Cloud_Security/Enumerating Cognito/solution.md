@@ -239,4 +239,4 @@ no-reply@verificationemail.com
 - Email headers are valuable reconnaissance sources
 - AWS CLI enables direct interaction with cloud authentication systems
 - Security teams should minimize metadata exposure in automated emails
-```
+---
