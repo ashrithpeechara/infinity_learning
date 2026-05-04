@@ -160,9 +160,9 @@ Bucket-mgmgt-Function
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{
 'primaryColor':'#ffffff',
-'primaryTextColor':'#000000',
-'primaryBorderColor':'#000000',
-'lineColor':'#000000',
+'primaryTextColor':'#fc0101',
+'primaryBorderColor':'#ffffff',
+'lineColor':'#ffffff',
 'secondaryColor':'#ffffff',
 'tertiaryColor':'#ffffff',
 'background':'#ffffff'
@@ -283,9 +283,9 @@ The Lambda execution role had broader permissions than the invoking user.
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{
 'primaryColor':'#ffffff',
-'primaryTextColor':'#000000',
-'primaryBorderColor':'#000000',
-'lineColor':'#000000',
+'primaryTextColor':'#ff0000',
+'primaryBorderColor':'#ffffff',
+'lineColor':'#ffffff',
 'secondaryColor':'#ffffff',
 'tertiaryColor':'#ffffff',
 'background':'#ffffff'
