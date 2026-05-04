@@ -430,9 +430,9 @@ The key takeaway is understanding:
   "theme": "base",
   "themeVariables": {
     "primaryColor": "#ffffff",
-    "primaryTextColor": "#000000",
-    "primaryBorderColor": "#e74c3c",
-    "lineColor": "#555555",
+    "primaryTextColor": "#ff0000",
+    "primaryBorderColor": "#ffffff",
+    "lineColor": "#ffffff",
     "background": "#ffffff"
   }
 }}%%

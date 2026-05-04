@@ -119,9 +119,9 @@ Successfully identify the privilege escalation path and retrieve the hidden flag
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{
 'primaryColor':'#ffffff',
-'primaryTextColor':'#000000',
-'primaryBorderColor':'#000000',
-'lineColor':'#000000',
+'primaryTextColor':'#ff0000',
+'primaryBorderColor':'#ffffff',
+'lineColor':'#ffffff',
 'secondaryColor':'#ffffff',
 'tertiaryColor':'#ffffff',
 'background':'#ffffff'
