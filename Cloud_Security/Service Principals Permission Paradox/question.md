@@ -23,8 +23,8 @@ The following Service Principal credentials are provided:
 
 | Parameter | Value |
 |---|---|
-| Client ID | 5ee2cd9a-8ec5-4a06-a543-30ce0fc1585f |
-| Client Secret | o8g8Q~jZzIZ-eoCgxSC0CDSsdwJ9pjsTRVEIJdsT |
+| Client ID | 5xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxf |
+| Client Secret | <GIVEN_IN_CREDENTIALS> |
 | Domain | secure-corp.org |
 
 ---
