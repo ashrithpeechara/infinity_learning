@@ -148,7 +148,6 @@ The content is provided solely for educational, research, and defensive security
 
 ---
 
-## Maintained By
 
 ## Maintained By
 
