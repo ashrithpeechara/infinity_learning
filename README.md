@@ -150,6 +150,8 @@ The content is provided solely for educational, research, and defensive security
 
 ## Maintained By
 
-**CWL Infinity Labs**
+## Maintained By
 
-Offensive Security • Cloud Research • Red Team Engineering
+**Ashrith Peechara**
+
+Digital Forensics • Blue Teaming • Offensive Security Research
